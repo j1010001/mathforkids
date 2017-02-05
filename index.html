@@ -1,0 +1,85 @@
+<html>
+<body>
+
+  <div id="progress"></div>
+  <div id="problem"></div>
+  <div id="response">
+    <input type="text" id="response_input">
+    <button id="button" type="button">that's it I am sure</button>
+  </div>
+  <div id="result"></div>
+  <div id="keyboard"></div>
+
+  <script>
+
+
+    var generate_problem = function(problem) {
+        problem.a = Math.floor(Math.random() * 100);
+        problem.b = Math.floor(Math.random() * 100);
+        problem.type = Math.floor(Math.random() * 10) % 2;
+
+        switch(problem.type) {
+          case 1:
+            problem.type = "+";
+            break;
+          default:
+            problem.type = "-";
+            break;
+        }
+        console.log("a: " + problem.a + " b: " + problem.b + "type:" + problem.type);
+
+        var problem_element = document.getElementById("problem");
+
+        problem_element.textContent = problem.a + " " + problem.type + " " + problem.b;
+
+        window.requestAnimationFrame(get_response);
+    }
+
+    var get_response = function() {
+      //var response = prompt("type the result");
+      return Number(document.getElementById("response_input").value);
+
+    }
+
+    var evaluate_response = function(problem, response) {
+      var result = false;
+      switch (problem.type) {
+        case "+":
+          if((problem.a + problem.b) == response)
+            result = true;
+
+        case "-":
+          if((problem.a - problem.b) == response)
+            result = true;
+      }
+
+      return result;
+    }
+
+    var init = function() {
+      console.log("Initializing ...");
+
+      var problem = {};
+      generate_problem(problem);
+      var result;
+
+      document.getElementById("button").addEventListener("click", function() {
+        var response = get_response();
+        result = evaluate_response(problem, response);
+
+        var result_element = document.getElementById("result");
+        if(result == true)
+        {
+            result_element.textContent = "That's right, Well done!";
+        }
+        else {
+            result_element.textContent = "Oh Oh ... try again";
+        }
+      });
+    }
+
+  window.addEventListener("load", init());
+
+  </script>
+</body>
+</html>
