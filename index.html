@@ -1,21 +1,47 @@
 <html>
+<head>
+  <style>
+
+    #button:hover {
+      background-color: lightgreen;
+    }
+
+    div {
+      margin:auto;
+      text-align:center;
+    }
+
+  </style>
+</head>
 <body>
 
-  <div id="progress"></div>
-  <div id="problem"></div>
-  <div id="response">
-    <input type="text" id="response_input">
-    <button id="button" type="button">that's it I am sure</button>
+  <div id="problem_setup_area">
+    problem setup
+    <br>
+    max number to use:<input id="problem_setup_max_num" type="number">
+    <br>
+    how many problems will you solve:<input id="problem_setup_num_of_probs" type="number">
+    <br>
+    <button id="problem_setup_button" type="button">start</button>
   </div>
-  <div id="result"></div>
-  <div id="keyboard"></div>
-
+  <div id="problem_solving_area">
+    <div id="progress"></div>
+    <div id="problem"></div>
+    <div id="response">
+      <input id="response_input" type="text">
+      <button id="response_button" type="button">that's it I am sure</button>
+    </div>
+    <div id="result"></div>
+    <div id="keyboard"></div>
+  </div>
+  <div id="result_area">
+  </div>
   <script>
 
 
-    var generate_problem = function(problem) {
-        problem.a = Math.floor(Math.random() * 100);
-        problem.b = Math.floor(Math.random() * 100);
+    var generate_problem = function(problem_setup, problem) {
+        problem.a = Math.floor(Math.random() * problem_setup.max_num);
+        problem.b = Math.floor(Math.random() * problem_setup.max_num);
         problem.type = Math.floor(Math.random() * 10) % 2;
 
         switch(problem.type) {
@@ -56,16 +82,52 @@
       return result;
     }
 
+    var display_results = function(results) {
+      var results_element = document.getElementById("result_area");
+      var content;
+      var i;
+      for(i=0;i<=results.length;i++){
+        content = document.createTextNode(results[i].a + " " + results[i].type + " " + results[i].b + " = " + results[i].response);
+        //content = document.createTextNode("line: " + i);
+        results_element.appendChild(content);
+        results_element.innerHTML += "<br>";
+      }
+    }
+
     var init = function() {
       console.log("Initializing ...");
 
-      var problem = {};
-      generate_problem(problem);
+      function problem(a, b, type, result, response) {
+          this.a = a;
+          this.b = b;
+          this.type = type;
+          this.result = result;
+          this.response = response;
+      }
+      var probs_solved_counter = 0;
+      var problem_setup = {};
       var result;
+      var results = [];
+      var p;
 
-      document.getElementById("button").addEventListener("click", function() {
+      //hide the problem solving are until problem setup is done
+      document.getElementById("problem_solving_area").style.visibility = "hidden";
+
+      //when setup is done hide the problem setup and expose the problem solution area
+      document.getElementById("problem_setup_button").addEventListener("click", function() {
+        console.log("Problem setup done ...");
+        problem_setup.max_num = document.getElementById("problem_setup_max_num").value;
+        problem_setup.num_of_probs = document.getElementById("problem_setup_num_of_probs").value;
+
+        document.getElementById("problem_setup_area").style.visibility = "hidden";
+        document.getElementById("problem_solving_area").style.visibility = "visible";
+
+        generate_problem(problem_setup, p = new problem());
+      });
+
+      document.getElementById("response_button").addEventListener("click", function() {
         var response = get_response();
-        result = evaluate_response(problem, response);
+        result = evaluate_response(p, response);
 
         var result_element = document.getElementById("result");
         if(result == true)
@@ -74,6 +136,22 @@
         }
         else {
             result_element.textContent = "Oh Oh ... try again";
+        }
+
+        //save the problem and the solution
+        p.response = response;
+        p.result = result;
+        results.push(p);
+        probs_solved_counter++;
+        if(probs_solved_counter < problem_setup.num_of_probs)
+        {
+          generate_problem(problem_setup, p = new problem());
+        }
+        else {
+          //exercise done, hide problem solution area, show results
+          document.getElementById("problem_solving_area").style.visibility = "hidden";
+          display_results(results);
+          console.log("finished!");
         }
       });
     }
