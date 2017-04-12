@@ -2,13 +2,38 @@
 <head>
   <style>
 
-    #button:hover {
+    .button:hover {
       background-color: lightgreen;
     }
 
     div {
       margin:auto;
       text-align:center;
+    }
+
+    .meter {
+      height: 20px;  /* Can be anything */
+      position: relative;
+      background: rgb(70,70,70);
+      border-radius: 25px;
+      padding: 7px;
+
+    }
+
+    .meter > span {
+      display: block;
+      height: 100%;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+      background-color: rgb(43,194,83);
+      position: relative;
+
+    }
+
+    #problem_solving_area {
+      width:50%;
     }
 
   </style>
@@ -22,14 +47,16 @@
     <br>
     how many problems will you solve:<input id="problem_setup_num_of_probs" type="number">
     <br>
-    <button id="problem_setup_button" type="button">start</button>
+    <button class="button" id="problem_setup_button" type="button">start</button>
   </div>
   <div id="problem_solving_area">
-    <div id="progress"></div>
+    <div class="meter">
+      <span id="meter_span" style="width: 0%"></span>
+    </div>
     <div id="problem"></div>
     <div id="response">
       <input id="response_input" type="text">
-      <button id="response_button" type="button">that's it I am sure</button>
+      <button class="button" id="response_button" type="button">that's it I am sure</button>
     </div>
     <div id="result"></div>
     <div id="keyboard"></div>
@@ -145,6 +172,9 @@
         probs_solved_counter++;
         if(probs_solved_counter < problem_setup.num_of_probs)
         {
+          //update the progress meter
+
+          document.getElementById("meter_span").style.width = ((probs_solved_counter/problem_setup.num_of_probs)*100) + "%";
           generate_problem(problem_setup, p = new problem());
         }
         else {
