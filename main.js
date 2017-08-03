@@ -1,4 +1,12 @@
 
+function problem(a, b, type, result, response) {
+    this.a = a;
+    this.b = b;
+    this.type = type;
+    this.result = result;
+    this.response = response;
+}
+
 var generate_problem = function(problem_setup, problem) {
     problem.a = Math.floor(Math.random() * problem_setup.max_num);
     problem.b = Math.floor(Math.random() * problem_setup.max_num);

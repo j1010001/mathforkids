@@ -27,26 +27,20 @@
   </div>
   <div id="result_area">
   </div>
+
   <script type="text/javascript" src="main.js"></script>
   <script>
 
     var init = function() {
       console.log("Initializing ...");
 
-      function problem(a, b, type, result, response) {
-          this.a = a;
-          this.b = b;
-          this.type = type;
-          this.result = result;
-          this.response = response;
-      }
       var probs_solved_counter = 0;
       var problem_setup = {};
       var result;
       var results = [];
       var p;
 
-      //hide the problem solving are until problem setup is done
+      //hide the problem solving area until problem setup is done
       document.getElementById("problem_solving_area").style.visibility = "hidden";
 
       //when setup is done hide the problem setup and expose the problem solution area
@@ -55,7 +49,7 @@
         problem_setup.max_num = document.getElementById("problem_setup_max_num").value;
         problem_setup.num_of_probs = document.getElementById("problem_setup_num_of_probs").value;
 
-        document.getElementById("problem_setup_area").style.visibility = "hidden";
+        document.getElementById("problem_setup_area").style.display = "none";
         document.getElementById("problem_solving_area").style.visibility = "visible";
 
         generate_problem(problem_setup, p = new problem());
@@ -88,7 +82,7 @@
         }
         else {
           //exercise done, hide problem solution area, show results
-          document.getElementById("problem_solving_area").style.visibility = "hidden";
+          document.getElementById("problem_solving_area").style.display = "none";
           display_results(results);
           console.log("finished!");
         }
