@@ -76,9 +76,11 @@
         if(probs_solved_counter < problem_setup.num_of_probs)
         {
           //update the progress meter
-
           document.getElementById("meter_span").style.width = ((probs_solved_counter/problem_setup.num_of_probs)*100) + "%";
           generate_problem(problem_setup, p = new problem());
+
+          //clean the response field
+          document.getElementById("response_input").value = '';
         }
         else {
           //exercise done, hide problem solution area, show results
